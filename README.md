@@ -1,13 +1,29 @@
 # Ansible Role: RabbitMQ
 
 Installs RabbitMQ service on RHEL/CentOS.
-RabbitMQ is an open-source message-broker software that originally implemented the Advanced Message Queuing Protocol (AMQP). Currently this role installs RabbitMQ pre-configured with defaults tuned for Magento. 
+RabbitMQ is an open-source message-broker software that originally implemented the Advanced Message Queuing Protocol (AMQP). 
+Currently this role provides a possibility to install RabbitMQ server and create virtualhosts and users. 
 
 ## Requirements
 
 None.
 
 ## Role Variables
+
+An example of configuration:
+
+    use_classyllama_rabbitmq: true
+    rabbitmq_version: 3.9
+    rabbitmq_vhosts:
+      - name: production
+      - name: staging
+    rabbitmq_users:
+      - user: production
+        password: changeme
+        vhost: production
+      - user: staging
+        password: changeme
+        vhost: staging
 
 See `defaults/main.yml` for details.
 
@@ -17,10 +33,9 @@ See `defaults/main.yml` for details.
 
 ## Example Playbook
 
-    - hosts: all
-      vars:
-      roles:
-        - { role: classyllama.rabbitmq }
+- hosts: all
+  roles:
+     - { role: classyllama.rabbitmq, tags: rabbitmq, when: use_classyllama_rabbitmq | default(false) }
 
 ## License
 

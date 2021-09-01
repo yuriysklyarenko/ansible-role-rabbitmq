@@ -10,5 +10,3 @@ rabbitmq_rpm_enable_repo: "rabbitmq_rabbitmq-server"
 rabbitmq_vhosts: []
 rabbitmq_users: []
 rabbitmq_delete_guest: true
-
-rabbitmq_hide_log: true

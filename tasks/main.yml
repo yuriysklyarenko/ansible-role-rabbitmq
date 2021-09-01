@@ -15,8 +15,8 @@
   yum:
     name: "rabbitmq-server{{ rabbitmq_version_specific | ternary ('-' + (rabbitmq_version_specific | string),'-' + (rabbitmq_version | string) + '*') }}"
     state: present
-    disablerepo: "{{ rabbitmq_rpm_disable_repo | d(omit, true) }}"
-    enablerepo: "{{ rabbitmq_rpm_enable_repo | d(omit, true) }}"
+    disablerepo: "{{ rabbitmq_rpm_disable_repo }}"
+    enablerepo: "{{ rabbitmq_rpm_enable_repo }}"
 
 - name: restart RabbitMQ
   meta: flush_handlers
@@ -27,28 +27,25 @@
     state: "started"
     enabled: "true"
 
-- name: virtualhost creation
+- name: create RabbitMQ virtualhosts
   rabbitmq_vhost:
     name: "{{ item.name }}"
     state: present
   with_items:
     - "{{ rabbitmq_vhosts }}"
 
-- name: users creation
+- name: create RabbitMQ users
   rabbitmq_user:
     user: "{{ item.user }}"
     password: "{{ item.password }}"
-    configure_priv: "{{ item.configure_priv | default(omit) }}"
-    read_priv: "{{ item.read_priv | default(omit) }}"
-    write_priv: "{{ item.write_priv | default(omit) }}"
-    vhost: "{{ item.vhost | default(omit) }}"
-    permissions: "{{ item.permissions | default(omit) }}"
-    update_password: "{{ item.update_password | default(omit) }}"
-  no_log: "{{ rabbitmq_hide_log }}"
+    configure_priv: .*
+    read_priv: .*
+    write_priv: .*
+    vhost: "{{ item.vhost }}"
   with_items:
     - "{{ rabbitmq_users }}"
 
-- name: delete guest user
+- name: delete RabbitMQ guest user
   rabbitmq_user:
     user: guest
     state: absent
