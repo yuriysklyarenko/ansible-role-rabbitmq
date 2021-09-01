@@ -4,12 +4,18 @@
     path: "{{ rabbitmq_repo_file }}"
   register: rabbitmq_repofile_result
 
+- name: debug repo
+  var: rabbitmq_repofile_result
+  
 - name: Download and run RabbitMQ Package Repository Setup script
   shell: |
     curl -LsS "{{ rabbitmq_repo_script_setup_url }}" | bash -s --
   args:
     executable: "/bin/bash"
   when: not rabbitmq_repofile_result.stat.exists
+
+- name: debug repo exist
+  var: rabbitmq_repofile_result.stat.exists
 
 - name: install RabbitMQ
   yum:
