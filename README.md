@@ -13,7 +13,6 @@ None.
 An example of configuration:
 
     use_classyllama_rabbitmq: true
-    rabbitmq_version: 3.9
     rabbitmq_vhosts:
       - name: production
       - name: staging

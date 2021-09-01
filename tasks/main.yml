@@ -4,10 +4,6 @@
     path: "{{ rabbitmq_repo_file }}"
   register: rabbitmq_repofile_result
 
-- name: debug repo
-  ansible.builtin.debug:
-    var: rabbitmq_repofile_result
-  
 - name: Download and run RabbitMQ Package Repository Setup script
   shell: |
     curl -LsS "{{ rabbitmq_repo_script_setup_url }}" | bash -s --
@@ -15,15 +11,10 @@
     executable: "/bin/bash"
   when: not rabbitmq_repofile_result.stat.exists
 
-- name: debug repo exist
-  ansible.builtin.debug:
-    var: rabbitmq_repofile_result.stat.exists
-
 - name: install RabbitMQ
   yum:
     name: "rabbitmq-server{{ rabbitmq_version_specific | ternary ('-' + (rabbitmq_version_specific | string),'-' + (rabbitmq_version | string) + '*') }}"
     state: present
-    disablerepo: "{{ rabbitmq_rpm_disable_repo }}"
     enablerepo: "{{ rabbitmq_rpm_enable_repo }}"
 
 - name: restart RabbitMQ
