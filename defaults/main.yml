@@ -1,0 +1,14 @@
+---
+rabbitmq_version: 3.9
+rabbitmq_version_specific:
+
+rabbitmq_repo_file: /etc/yum.repos.d/rabbitmq_rabbitmq-server.repo
+rabbitmq_repo_script_setup_url: https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.rpm.sh
+rabbitmq_rpm_disable_repo: "*"
+rabbitmq_rpm_enable_repo: "rabbitmq_rabbitmq-server"
+
+rabbitmq_vhosts: []
+rabbitmq_users: []
+rabbitmq_delete_guest: true
+
+rabbitmq_hide_log: true

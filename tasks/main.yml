@@ -1,0 +1,55 @@
+---
+- name: Check if RabbitMQ repo is already configured
+  stat:
+    path: {{ rabbitmq_repo_file }}
+  register: rabbitmq_repofile_result
+
+- name: Download and run RabbitMQ Package Repository Setup script
+  shell: |
+    curl -LsS "{{ rabbitmq_repo_script_setup_url }}" | bash -s --"
+  args:
+    executable: "/bin/bash"
+  when: not rabbitmq_repofile_result.stat.exists
+
+- name: install RabbitMQ
+  yum:
+    name: "rabbitmq-server{{ rabbitmq_version_specific | ternary ('-' + (rabbitmq_version_specific | string),'-' + (rabbitmq_version | string) + '*') }}"
+    state: present
+    disablerepo: "{{ rabbitmq_rpm_disable_repo | d(omit, true) }}"
+    enablerepo: "{{ rabbitmq_rpm_enable_repo | d(omit, true) }}"
+
+- name: restart RabbitMQ
+  meta: flush_handlers
+
+- name: ensure RabbitMQ is started and enabled
+  systemd:
+    name: "rabbitmq-server.service"
+    state: "started"
+    enabled: "true"
+
+- name: virtualhost creation
+  rabbitmq_vhost:
+    name: "{{ item.name }}"
+    state: present
+  with_items:
+    - "{{ rabbitmq_vhosts }}"
+
+- name: users creation
+  rabbitmq_user:
+    user: "{{ item.user }}"
+    password: "{{ item.password }}"
+    configure_priv: "{{ item.configure_priv | default(omit) }}"
+    read_priv: "{{ item.read_priv | default(omit) }}"
+    write_priv: "{{ item.write_priv | default(omit) }}"
+    vhost: "{{ item.vhost | default(omit) }}"
+    permissions: "{{ item.permissions | default(omit) }}"
+    update_password: "{{ item.update_password | default(omit) }}"
+  no_log: "{{ rabbitmq_hide_log }}"
+  with_items:
+    - "{{ rabbitmq_users }}"
+
+- name: delete guest user
+  rabbitmq_user:
+    user: guest
+    state: absent
+  when: rabbitmq_delete_guest
