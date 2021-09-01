@@ -5,7 +5,8 @@
   register: rabbitmq_repofile_result
 
 - name: debug repo
-  var: rabbitmq_repofile_result
+  ansible.builtin.debug:
+    var: rabbitmq_repofile_result
   
 - name: Download and run RabbitMQ Package Repository Setup script
   shell: |
@@ -15,7 +16,8 @@
   when: not rabbitmq_repofile_result.stat.exists
 
 - name: debug repo exist
-  var: rabbitmq_repofile_result.stat.exists
+  ansible.builtin.debug:
+    var: rabbitmq_repofile_result.stat.exists
 
 - name: install RabbitMQ
   yum:
