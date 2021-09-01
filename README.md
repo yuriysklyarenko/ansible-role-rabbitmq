@@ -33,9 +33,9 @@ See `defaults/main.yml` for details.
 
 ## Example Playbook
 
-- hosts: all
-  roles:
-     - { role: classyllama.rabbitmq, tags: rabbitmq, when: use_classyllama_rabbitmq | default(false) }
+    - hosts: all
+      roles:
+         - { role: classyllama.rabbitmq, tags: rabbitmq, when: use_classyllama_rabbitmq | default(false) }
 
 ## License
 
