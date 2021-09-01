@@ -1,7 +1,7 @@
 ---
 - name: Check if RabbitMQ repo is already configured
   stat:
-    path: {{ rabbitmq_repo_file }}
+    path: "{{ rabbitmq_repo_file }}"
   register: rabbitmq_repofile_result
 
 - name: Download and run RabbitMQ Package Repository Setup script
