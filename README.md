@@ -23,6 +23,9 @@ An example of configuration:
       - user: staging
         password: changeme
         vhost: staging
+      - user: manager
+        password: rabbitmqmgr
+        tags: management
 
 See `defaults/main.yml` for details.
 

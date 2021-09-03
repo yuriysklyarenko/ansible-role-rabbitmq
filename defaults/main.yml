@@ -10,3 +10,6 @@ rabbitmq_rpm_enable_repo: "rabbitmq_rabbitmq-server"
 rabbitmq_vhosts: []
 rabbitmq_users: []
 rabbitmq_delete_guest: true
+
+rabbitmq_config_template: "rabbitmq/rabbitmq.config"
+rabbitmq_plugin_template: "rabbitmq/enabled_plugins"

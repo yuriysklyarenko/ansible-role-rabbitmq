@@ -17,8 +17,23 @@
     state: present
     enablerepo: "{{ rabbitmq_rpm_enable_repo }}"
 
-- name: restart RabbitMQ
-  meta: flush_handlers
+- name: enable managment plugin
+  template:
+    src: "{{ rabbitmq_plugin_template }}"
+    dest: "/etc/rabbitmq/enabled_plugins"
+    force: true
+    mode: 0644
+    owner: root
+
+- name: secure RabbitMQ to run on a localhost only
+  template:
+    src: "{{ rabbitmq_config_template }}"
+    dest: "/etc/rabbitmq/rabbitmq.config"
+    force: true
+    mode: 0644
+    owner: root
+  notify:
+    - restart RabbitMQ
 
 - name: ensure RabbitMQ is started and enabled
   systemd:
@@ -40,7 +55,8 @@
     configure_priv: .*
     read_priv: .*
     write_priv: .*
-    vhost: "{{ item.vhost }}"
+    vhost: "{{ item.vhost | default(omit) }}"
+    tags: "{{ item.tags | default(omit) }}"
   with_items:
     - "{{ rabbitmq_users }}"
 
@@ -49,3 +65,6 @@
     user: guest
     state: absent
   when: rabbitmq_delete_guest
+
+- name: restart RabbitMQ
+  meta: flush_handlers
