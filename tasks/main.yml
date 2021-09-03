@@ -24,14 +24,6 @@
     force: true
     mode: 0644
     owner: root
-
-- name: prepare RabbitMQ config
-  template:
-    src: "{{ rabbitmq_config_template }}"
-    dest: "/etc/rabbitmq/rabbitmq.config"
-    force: true
-    mode: 0644
-    owner: root
   notify:
     - restart RabbitMQ
 
