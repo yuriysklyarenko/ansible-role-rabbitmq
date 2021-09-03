@@ -17,7 +17,7 @@
     state: present
     enablerepo: "{{ rabbitmq_rpm_enable_repo }}"
 
-- name: enable managment plugin
+- name: enable management plugin
   template:
     src: "{{ rabbitmq_plugin_template }}"
     dest: "/etc/rabbitmq/enabled_plugins"
@@ -48,6 +48,7 @@
     state: present
   with_items:
     - "{{ rabbitmq_vhosts }}"
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: create RabbitMQ users
   rabbitmq_user:
