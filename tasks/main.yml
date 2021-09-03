@@ -40,6 +40,7 @@
     name: "rabbitmq-server.service"
     state: "started"
     enabled: "true"
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: create RabbitMQ virtualhosts
   rabbitmq_vhost:
