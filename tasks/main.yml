@@ -60,12 +60,14 @@
     tags: "{{ item.tags | default(omit) }}"
   with_items:
     - "{{ rabbitmq_users }}"
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: delete RabbitMQ guest user
   rabbitmq_user:
     user: guest
     state: absent
   when: rabbitmq_delete_guest
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: restart RabbitMQ
   meta: flush_handlers
